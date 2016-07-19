@@ -425,6 +425,11 @@
 	[super viewDidUnload];
 }
 
+-(NSInteger)getCurrentPage
+{
+    return currentPage;
+}
+
 - (BOOL)prefersStatusBarHidden
 {
 	return YES;

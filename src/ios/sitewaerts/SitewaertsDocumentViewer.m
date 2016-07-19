@@ -158,6 +158,9 @@
 #pragma mark - ReaderViewControllerDelegate methods
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController {
+    
+    NSInteger pageNumber = [viewController getCurrentPage];
+    
     [self.viewController dismissViewControllerAnimated:YES completion:nil];
     //send "no result" result to trigger onClose
     // result object
@@ -169,6 +172,7 @@
                                     nil
                                     ];
     [jsonObj setObject:[NSNumber numberWithInt:CDVCommandStatus_NO_RESULT]  forKey:@"status"];
+    [jsonObj setObject:[NSNumber numberWithInteger:pageNumber] forKey:@"pageNumber"];
     //result status has to be OK, otherwise the cordova success callback will not be called
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:tmpCommandCallbackID];

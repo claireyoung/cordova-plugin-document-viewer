@@ -75,4 +75,6 @@
 
 - (void)updateContentViews:(UIScrollView *)scrollView;
 
+- (NSInteger)getCurrentPage;
+
 @end

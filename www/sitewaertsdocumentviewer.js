@@ -242,7 +242,7 @@ var SitewaertsDocumentViewer = {
                                     else if (status == 0)
                                     {
                                         if (onClose)
-                                            onClose();
+                                            onClose(result);
                                     }
                                     else
                                     {
