@@ -71,9 +71,9 @@ function getOptions(provided)
         options.search.enabled = false;
 
     if (!options.page)
-        options.page = 0;
+        options.page = 1;
     if (!options.page.number)
-        options.page.number = 0;
+        options.page.number = 1;
 
 
     if (!options.android)
