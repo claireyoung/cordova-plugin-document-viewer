@@ -169,6 +169,7 @@
                                     nil, @"status",
                                     nil, @"message",
                                     nil, @"missingAppId",
+                                    nil, @"pageNumber",
                                     nil
                                     ];
     [jsonObj setObject:[NSNumber numberWithInt:CDVCommandStatus_NO_RESULT]  forKey:@"status"];

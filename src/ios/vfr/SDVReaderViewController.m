@@ -1080,6 +1080,15 @@
     contentViews = [NSMutableDictionary new]; lastHideTime = [NSDate date];
     
     minimumPage = 1; maximumPage = [document.pageCount integerValue];
+    
+    NSDictionary* pageOptions = [self.viewerOptions objectForKey: @"page"];
+    if (pageOptions != nil) {
+        NSInteger pageNumber = [[pageOptions objectForKey: @"number"] integerValue];
+        [self showDocumentPage:pageNumber];
+    } else {
+        [self showDocumentPage:1];
+    }
+    
 }
 
 // show status bar

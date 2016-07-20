@@ -70,6 +70,11 @@ function getOptions(provided)
     if (!options.search.enabled)
         options.search.enabled = false;
 
+    if (!options.page)
+        options.page = 0;
+    if (!options.page.number)
+        options.page.number = 0;
+
 
     if (!options.android)
         options.android = {};
