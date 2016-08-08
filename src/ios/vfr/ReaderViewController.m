@@ -118,7 +118,7 @@
 	CGFloat viewWidth = scrollView.bounds.size.width; // View width
 
 	CGFloat contentOffsetX = scrollView.contentOffset.x; // Content offset X
-
+    
 	NSInteger pageB = ((contentOffsetX + viewWidth - 1.0f) / viewWidth); // Pages
 
 	NSInteger pageA = (contentOffsetX / viewWidth); pageB += 2; // Add extra pages
@@ -525,6 +525,12 @@
 		[theScrollView setContentOffset:contentOffset animated:YES];
 	}
 }
+
+- (void)handleSwipe:(UISwipeGestureRecognizer *)recognizer
+{
+    [delegate dismissReaderViewController:self];
+}
+
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer
 {

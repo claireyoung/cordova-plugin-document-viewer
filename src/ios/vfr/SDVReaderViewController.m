@@ -1076,7 +1076,11 @@
     [self.view addGestureRecognizer:doubleTapTwo];
     
     [singleTapOne requireGestureRecognizerToFail:doubleTapOne]; // Single tap requires double tap to fail
-    
+
+    UISwipeGestureRecognizer *swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+    swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:swipeUp];
+        
     contentViews = [NSMutableDictionary new]; lastHideTime = [NSDate date];
     
     minimumPage = 1; maximumPage = [document.pageCount integerValue];

@@ -81,6 +81,8 @@ not sure if this is correct, it creates a second application tag in the manifest
 
         <header-file src="src/ios/sitewaerts/SitewaertsDocumentViewer.h"/>
         <source-file src="src/ios/sitewaerts/SitewaertsDocumentViewer.m"/>
+        <header-file src="src/ios/sitewaerts/SwipeDismissAnimationController.h"/>
+        <source-file src="src/ios/sitewaerts/SwipeDismissAnimationController.m"/>
 
         <header-file src="src/ios/vfr/CGPDFDocument.h"/>
         <source-file src="src/ios/vfr/CGPDFDocument.m"/>

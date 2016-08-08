@@ -27,14 +27,17 @@
 
 #import "SitewaertsDocumentViewer.h"
 #import "SDVReaderViewController.h"
+#import "SwipeDismissAnimationController.h"
 
-@interface SitewaertsDocumentViewer () <ReaderViewControllerDelegate>
+@interface SitewaertsDocumentViewer () <ReaderViewControllerDelegate, UIViewControllerTransitioningDelegate>
 
 @end
 
 @implementation SitewaertsDocumentViewer
 {
     NSString *tmpCommandCallbackID;
+    SwipeDismissAnimationController* swipeDismissAnimationController;
+    
 }
 
 #pragma mark - SitewaertsDocumentViewer methods
@@ -128,9 +131,11 @@
                 readerViewController.delegate = self;
                 readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-
-                [self.viewController presentViewController:readerViewController animated:YES completion:nil];
+                swipeDismissAnimationController = [[SwipeDismissAnimationController alloc] init];
+                readerViewController.transitioningDelegate = self;
                 
+                [self.viewController presentViewController:readerViewController animated:YES completion:nil];
+
                 // result object
                 NSMutableDictionary *jsonObj = [ [NSMutableDictionary alloc]
                                                 initWithObjectsAndKeys :
@@ -179,4 +184,9 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:tmpCommandCallbackID];
 }
 
+#pragma mark UIViewControllerTransitioningDelegate
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    swipeDismissAnimationController.destinationFrame = self.viewController.view.frame;
+    return swipeDismissAnimationController;
+}
 @end
