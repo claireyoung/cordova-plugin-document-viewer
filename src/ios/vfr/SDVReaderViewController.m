@@ -1082,6 +1082,7 @@
 //    [self.view addGestureRecognizer:swipeUp];
 
     UIPanGestureRecognizer *panUp = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    panUp.maximumNumberOfTouches = 1;
     [self.view addGestureRecognizer:panUp];
     
     

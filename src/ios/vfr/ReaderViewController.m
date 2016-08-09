@@ -538,11 +538,15 @@
 -(void)handlePan:(UIPanGestureRecognizer *)recognizer
 {
     CGPoint velocity = [recognizer velocityInView:self.view];
-    if (recognizer.state == UIGestureRecognizerStateEnded)
+    CGPoint interval = [recognizer translationInView:self.view];
+    if (recognizer.state == UIGestureRecognizerStateEnded ||
+        recognizer.state == UIGestureRecognizerStateChanged)
     {
         NSLog(@"Speed x %f, y %f", velocity.x, velocity.y);
-        
-        if (velocity.y < -400) {
+
+        // interval -80 is the width of my thumb
+        // velocity -500 is the slowest we accept the view to pan
+        if (velocity.y < -500 && interval.y < -80) {
             swipeDismissAnimationController = [[SwipeDismissAnimationController alloc] init];
             swipeDismissAnimationController.velocity = velocity;
             self.transitioningDelegate = self;
