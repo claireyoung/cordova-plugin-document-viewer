@@ -11,5 +11,6 @@
 @interface SwipeDismissAnimationController : NSObject
 
 @property CGRect destinationFrame;
+@property CGPoint velocity;
 
 @end

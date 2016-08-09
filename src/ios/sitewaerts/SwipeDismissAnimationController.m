@@ -14,7 +14,7 @@
 @implementation SwipeDismissAnimationController
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
-    return 2;
+    return 0.2;
 }
 
 +(CATransform3D)yRotation:(double)angle {
@@ -45,8 +45,12 @@
     
     fromVC.view.hidden = true;
 
-
-    [UIView animateKeyframesWithDuration:[self transitionDuration:transitionContext] delay:0 options:
+    CGFloat durationScreen = [self transitionDuration:transitionContext];
+    if (self.velocity.y != 0) {
+        durationScreen = fabs(self.destinationFrame.size.height / self.velocity.y);
+    }
+    
+    [UIView animateKeyframesWithDuration:durationScreen delay:0 options:
     UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
         
         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:1.0 animations:^(void){

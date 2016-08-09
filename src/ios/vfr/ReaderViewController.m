@@ -31,14 +31,18 @@
 #import "ReaderContentView.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbQueue.h"
+#import "SwipeDismissAnimationController.h"
+
 
 #import <MessageUI/MessageUI.h>
 
 @interface ReaderViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate,
-									ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelegate>
+									ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelegate, UIViewControllerTransitioningDelegate>
 @end
 
-@implementation ReaderViewController
+@implementation ReaderViewController {
+    SwipeDismissAnimationController* swipeDismissAnimationController;
+}
 
 #pragma mark - Constants
 
@@ -531,6 +535,22 @@
     [delegate dismissReaderViewController:self];
 }
 
+-(void)handlePan:(UIPanGestureRecognizer *)recognizer
+{
+    CGPoint velocity = [recognizer velocityInView:self.view];
+    if (recognizer.state == UIGestureRecognizerStateEnded)
+    {
+        NSLog(@"Speed x %f, y %f", velocity.x, velocity.y);
+        
+        if (velocity.y < -400) {
+            swipeDismissAnimationController = [[SwipeDismissAnimationController alloc] init];
+            swipeDismissAnimationController.velocity = velocity;
+            self.transitioningDelegate = self;
+            [delegate dismissReaderViewController:self];
+        }
+    }
+}
+
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer
 {
@@ -881,6 +901,12 @@
 	[document archiveDocumentProperties]; // Save any ReaderDocument changes
 
 	if (userInterfaceIdiom == UIUserInterfaceIdiomPad) if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+}
+
+#pragma mark UIViewControllerTransitioningDelegate
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    swipeDismissAnimationController.destinationFrame = self.view.frame;
+    return swipeDismissAnimationController;
 }
 
 @end
