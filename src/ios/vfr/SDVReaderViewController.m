@@ -93,6 +93,7 @@
         }
         
         currentPage = (int) ceil(nextCurrentPage);
+        [self.delegate pageChanged:(int)currentPage];
         maximumPage = (int) ceil(maxPage);
     }
     
@@ -397,7 +398,10 @@
     
     if (page != currentPage) // Only if on different page
     {
-        currentPage = page; document.pageNumber = [NSNumber numberWithInteger:page];
+        currentPage = page;
+        [self.delegate pageChanged:(int)currentPage];
+
+        document.pageNumber = [NSNumber numberWithInteger:page];
         
         [contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
          ^(NSString *key, ReaderContentView *contentView, BOOL *stop)
@@ -957,7 +961,9 @@
     {
         if ((renderPage < minimumPage) || (renderPage > maximumPage)) return;
         
-        currentPage = page; document.pageNumber = [NSNumber numberWithInteger:page];
+        currentPage = page;
+        [self.delegate pageChanged:(int)currentPage];
+        document.pageNumber = [NSNumber numberWithInteger:page];
         
         CGPoint contentOffset = CGPointMake((theScrollView.bounds.size.width * (renderPage - 1)), 0.0f);
         

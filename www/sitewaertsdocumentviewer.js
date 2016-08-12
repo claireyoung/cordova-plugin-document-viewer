@@ -217,7 +217,7 @@ var SitewaertsDocumentViewer = {
         }
     },
 
-    viewDocument: function (url, contentType, options, onShow, onClose, onMissingApp, onError)
+    viewDocument: function (url, contentType, options, onShow, onClose, onMissingApp, onError, currentPageCallback)
     {
         var me = this;
         var errorPrefix = "Error in " + JS_HANDLE + ".viewDocument(): ";
@@ -248,6 +248,13 @@ var SitewaertsDocumentViewer = {
                                     {
                                         if (onClose)
                                             onClose(result);
+                                    }
+                                    else if (status == 2)
+                                    {
+                                        if (currentPageCallback) {
+                                            var event = {pageNumber: result.pageNumber};
+                                            currentPageCallback(event);
+                                        }
                                     }
                                     else
                                     {

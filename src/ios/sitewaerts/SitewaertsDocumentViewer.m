@@ -180,4 +180,20 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:tmpCommandCallbackID];
 }
 
+- (void)pageChanged:(int)newPage {
+    NSMutableDictionary *jsonObj = [ [NSMutableDictionary alloc]
+                                    initWithObjectsAndKeys :
+                                    nil, @"status",
+                                    nil, @"pageNumber",
+                                    nil
+                                    ];
+    [jsonObj setObject:[NSNumber numberWithInt:2]  forKey:@"status"];
+    [jsonObj setObject:[NSNumber numberWithInteger:newPage] forKey:@"pageNumber"];
+    //result status has to be OK, otherwise the cordova success callback will not be called
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
+    [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:tmpCommandCallbackID];
+    
+}
+
 @end
