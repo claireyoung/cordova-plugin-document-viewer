@@ -1016,6 +1016,8 @@
 {
     [super viewDidLoad];
     
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    
     assert(document != nil); // Must have a valid ReaderDocument
     
     self.view.backgroundColor = [UIColor grayColor]; // Neutral gray
@@ -1047,7 +1049,7 @@
     theScrollView.showsHorizontalScrollIndicator = NO; theScrollView.showsVerticalScrollIndicator = NO;
     theScrollView.scrollsToTop = NO; theScrollView.delaysContentTouches = NO; theScrollView.pagingEnabled = YES;
     theScrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    theScrollView.backgroundColor = [UIColor clearColor]; theScrollView.delegate = self;
+    theScrollView.backgroundColor = [UIColor blackColor]; theScrollView.delegate = self;
     [self.view addSubview:theScrollView];
     
     CGRect toolbarRect = viewRect; toolbarRect.size.height = TOOLBAR_HEIGHT;
@@ -1117,13 +1119,39 @@
 {
     if (CGSizeEqualToSize(theScrollView.contentSize, CGSizeZero) == false)
     {
-        if ((viewMode == SDVReaderContentViewModeDoublePage)
-            || (viewMode == SDVReaderContentViewModeCoverDoublePage)) {
-            [self handleLandscapeDoublePage];
-        } else {
+        
+        
+        UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        if (orientation == UIInterfaceOrientationPortrait) {
+            NSLog(@"[pdfviewer] single page");
+            self.pagesPerScreen = 1;
+            self.viewMode = SDVReaderContentViewModeSinglePage;
+            
             [self updateContentViews:theScrollView];
+        } else if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
+            NSLog(@"[pdfviewer] cover mode");
+            self.pagesPerScreen = 1; // this is the minimum value
+            self.viewMode = SDVReaderContentViewModeCoverDoublePage;
+            
+            [self handleLandscapeDoublePage];
         }
+        
+//        [self handleLandscapeDoublePage];
+        
         lastAppearSize = CGSizeZero;
+        
+//        // hide thumbs if they are not required
+//        if ([document.pageCount integerValue] <= pagesPerScreen) {
+//            [mainPagebar hidePagebar]; // Show
+//        }
+//        
+//        if ((viewMode == SDVReaderContentViewModeDoublePage)
+//            || (viewMode == SDVReaderContentViewModeCoverDoublePage)) {
+//            [self handleLandscapeDoublePage];
+//        } else {
+//            [self updateContentViews:theScrollView];
+//        }
+//        lastAppearSize = CGSizeZero;
     }
 }
 
@@ -1437,13 +1465,6 @@
             
         case 1: // double page
         {
-            NSLog(@"[pdfviewer] double page");
-            self.pagesPerScreen = 2;
-            self.viewMode = SDVReaderContentViewModeDoublePage;
-            break;
-        }
-        case 2: // cover
-        {
             NSLog(@"[pdfviewer] cover mode");
             self.pagesPerScreen = 1; // this is the minimum value
             self.viewMode = SDVReaderContentViewModeCoverDoublePage;
@@ -1465,6 +1486,30 @@
     if ([document.pageCount integerValue] <= pagesPerScreen) {
         [mainPagebar hidePagebar]; // Show
     }
+}
+
+- (void)orientationChanged:(NSNotification *)notification
+{
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait) {
+        NSLog(@"[pdfviewer] single page");
+        self.pagesPerScreen = 1;
+        self.viewMode = SDVReaderContentViewModeSinglePage;
+    } else if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
+        NSLog(@"[pdfviewer] cover mode");
+        self.pagesPerScreen = 1; // this is the minimum value
+        self.viewMode = SDVReaderContentViewModeCoverDoublePage;
+    }
+    
+    [self handleLandscapeDoublePage];
+    
+    lastAppearSize = CGSizeZero;
+    
+    // hide thumbs if they are not required
+    if ([document.pageCount integerValue] <= pagesPerScreen) {
+        [mainPagebar hidePagebar]; // Show
+    }
+    
 }
 
 @end

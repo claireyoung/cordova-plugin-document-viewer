@@ -146,6 +146,8 @@ not sure if this is correct, it creates a second application tag in the manifest
         <source-file src="src/ios/vfr/UIXToolbarView.m"/>
 
 
+        <resource-file src="src/ios/Graphics/backButton.png"/>
+        <resource-file src="src/ios/Graphics/shareButton.png"/>
         <resource-file src="src/ios/Graphics/AppIcon-057.png"/>
         <resource-file src="src/ios/Graphics/AppIcon-072.png"/>
         <resource-file src="src/ios/Graphics/AppIcon-076.png"/>

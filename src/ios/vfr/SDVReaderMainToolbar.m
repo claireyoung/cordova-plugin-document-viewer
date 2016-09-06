@@ -28,8 +28,8 @@
 #define BUTTON_FONT_SIZE 15.0f
 #define TEXT_BUTTON_PADDING 24.0f
 
-#define SHOW_CONTROL_WIDTH 117.0f
-#define ICON_BUTTON_WIDTH 40.0f
+#define SHOW_CONTROL_WIDTH 80.0f
+#define ICON_BUTTON_WIDTH 30.0f
 
 #define TITLE_FONT_SIZE 19.0f
 #define TITLE_HEIGHT 28.0f
@@ -116,23 +116,26 @@
         
 #if (READER_STANDALONE == FALSE) // Option
         
+        // cyoung - THIS ONE GETS CALLED
         UIFont *doneButtonFont = [UIFont systemFontOfSize:BUTTON_FONT_SIZE];
         //get doneButtonText from options
-        NSString *toolbarOptionCloseLabel = [[options objectForKey: @"documentView"] objectForKey: @"closeLabel"];
-        NSLog(@"[pdfviewer] toolbar-options close label: %@", toolbarOptionCloseLabel);
-        NSString *doneButtonText = toolbarOptionCloseLabel?:NSLocalizedString(@"Done", @"button");
-        CGSize doneButtonSize = [doneButtonText sizeWithFont:doneButtonFont];
-        CGFloat doneButtonWidth = (doneButtonSize.width + TEXT_BUTTON_PADDING);
+//        NSString *toolbarOptionCloseLabel = [[options objectForKey: @"documentView"] objectForKey: @"closeLabel"];
+//        NSLog(@"[pdfviewer] toolbar-options close label: %@", toolbarOptionCloseLabel);
+//        NSString *doneButtonText = toolbarOptionCloseLabel?:NSLocalizedString(@"Done", @"button");
+//        CGSize doneButtonSize = [doneButtonText sizeWithFont:doneButtonFont];
+        CGFloat doneButtonWidth = (20 + TEXT_BUTTON_PADDING);
         
         UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
         doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
-        [doneButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:1.0f] forState:UIControlStateNormal];
+        [doneButton setTitleColor:[UIColor colorWithWhite:0.8f alpha:1.0f] forState:UIControlStateNormal];
         [doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateHighlighted];
-        [doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
+//        [doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
         [doneButton addTarget:self action:@selector(doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [doneButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
         [doneButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-        doneButton.autoresizingMask = UIViewAutoresizingNone;
+        [doneButton setImage:[UIImage imageNamed:@"backButton.png"] forState:UIControlStateNormal];
+//        doneButton.autoresizingMask = UIViewAutoresizingNone;
+        doneButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         //doneButton.backgroundColor = [UIColor grayColor];
         doneButton.exclusiveTouch = YES;
         
@@ -140,25 +143,43 @@
         
         titleX += (doneButtonWidth + buttonSpacing); titleWidth -= (doneButtonWidth + buttonSpacing);
         
+        NSString* title = @"Title Here";
+        CGSize labelSize = [title sizeWithFont:doneButtonFont];
+        CGFloat labelWidth = (labelSize.width + TEXT_BUTTON_PADDING);
+        
+        CGFloat centerX = self.frame.size.width/2;
+        CGFloat startLeft = centerX - labelWidth/2;
+        
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(startLeft, BUTTON_Y, labelWidth, BUTTON_HEIGHT)];
+        
+//        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
+        [titleLabel setTextColor:[UIColor whiteColor]];
+        [titleLabel setBackgroundColor:[UIColor blackColor]];
+        [titleLabel setText:title];
+        [self addSubview:titleLabel];
+
+        
 #endif // end of READER_STANDALONE Option
         
 #if (READER_ENABLE_THUMBS == TRUE) // Option
         //don't show navigation view for single page documents
         if ([document.pageCount intValue] > 1)
         {
-            UIButton *thumbsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            thumbsButton.frame = CGRectMake(leftButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
-            [thumbsButton setImage:[UIImage imageNamed:@"SDVReader-Outline"] forState:UIControlStateNormal];
-            [thumbsButton addTarget:self action:@selector(thumbsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-            [thumbsButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-            [thumbsButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-            thumbsButton.autoresizingMask = UIViewAutoresizingNone;
-            //thumbsButton.backgroundColor = [UIColor grayColor];
-            thumbsButton.exclusiveTouch = YES;
             
-            [self addSubview:thumbsButton]; //leftButtonX += (iconButtonWidth + buttonSpacing);
-            
-            titleX += (iconButtonWidth + buttonSpacing); titleWidth -= (iconButtonWidth + buttonSpacing);
+            // cyoung - don't enable this at all
+//            UIButton *thumbsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//            thumbsButton.frame = CGRectMake(leftButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+//            [thumbsButton setImage:[UIImage imageNamed:@"SDVReader-Outline"] forState:UIControlStateNormal];
+//            [thumbsButton addTarget:self action:@selector(thumbsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//            [thumbsButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+//            [thumbsButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+//            thumbsButton.autoresizingMask = UIViewAutoresizingNone;
+//            //thumbsButton.backgroundColor = [UIColor grayColor];
+//            thumbsButton.exclusiveTouch = YES;
+//            
+//            [self addSubview:thumbsButton]; //leftButtonX += (iconButtonWidth + buttonSpacing);
+//            
+//            titleX += (iconButtonWidth + buttonSpacing); titleWidth -= (iconButtonWidth + buttonSpacing);
         }
 #endif // end of READER_ENABLE_THUMBS Option
         
@@ -170,7 +191,7 @@
         NSLog(@"[pdfviewer] toolbar-options bookmarks: %d", toolbarOptionBookmarks);
         if (toolbarOptionBookmarks) {
             
-            rightButtonX -= (iconButtonWidth + buttonSpacing); // Position
+            rightButtonX -= (iconButtonWidth*2 + buttonSpacing*3); // Position
             
             UIButton *flagButton = [UIButton buttonWithType:UIButtonTypeCustom];
             flagButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
@@ -192,113 +213,133 @@
         }
 #endif // end of READER_BOOKMARKS Option
         
-        //get email enabled options
-        BOOL toolbarOptionEmail = [[[options objectForKey: @"email"] objectForKey: @"enabled"] boolValue];
-        NSLog(@"[pdfviewer] toolbar-options email: %d", toolbarOptionEmail);
-        if (toolbarOptionEmail) {
-            if (document.canEmail == YES) // Document email enabled
-            {
-                if ([MFMailComposeViewController canSendMail] == YES) // Can email
-                {
-                    unsigned long long fileSize = [document.fileSize unsignedLongLongValue];
-                    
-                    if (fileSize < 15728640ull) // Check attachment size limit (15MB)
-                    {
-                        rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
-                        
-                        UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                        emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
-                        [emailButton setImage:[UIImage imageNamed:@"Reader-Email"] forState:UIControlStateNormal];
-                        [emailButton addTarget:self action:@selector(emailButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-                        [emailButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-                        [emailButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-                        emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-                        //emailButton.backgroundColor = [UIColor grayColor];
-                        emailButton.exclusiveTouch = YES;
-                        
-                        [self addSubview:emailButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
-                    }
-                }
-            }
-        }
+//        //get email enabled options
+//        BOOL toolbarOptionEmail = [[[options objectForKey: @"email"] objectForKey: @"enabled"] boolValue];
+//        NSLog(@"[pdfviewer] toolbar-options email: %d", toolbarOptionEmail);
+//        if (toolbarOptionEmail) {
+//            if (document.canEmail == YES) // Document email enabled
+//            {
+//                if ([MFMailComposeViewController canSendMail] == YES) // Can email
+//                {
+//                    unsigned long long fileSize = [document.fileSize unsignedLongLongValue];
+//                    
+//                    if (fileSize < 15728640ull) // Check attachment size limit (15MB)
+//                    {
+//                        rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
+//                        
+//                        UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//                        emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+//                        [emailButton setImage:[UIImage imageNamed:@"Reader-Email"] forState:UIControlStateNormal];
+//                        [emailButton addTarget:self action:@selector(emailButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//                        [emailButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+//                        [emailButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+//                        emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//                        //emailButton.backgroundColor = [UIColor grayColor];
+//                        emailButton.exclusiveTouch = YES;
+//                        
+//                        [self addSubview:emailButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
+//                    }
+//                }
+//            }
+//        }
         
-        //get print enabled options
-        BOOL toolbarOptionPrint = [[[options objectForKey: @"print"] objectForKey: @"enabled"] boolValue];
-        NSLog(@"[pdfviewer] toolbar-options print: %d", toolbarOptionPrint);
-        if (toolbarOptionPrint) {
-            if ((document.canPrint == YES) && (document.password == nil)) // Document print enabled
-            {
-                Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
-                
-                if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable])
-                {
-                    rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
-                    
-                    UIButton *printButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                    printButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
-                    [printButton setImage:[UIImage imageNamed:@"Reader-Print"] forState:UIControlStateNormal];
-                    [printButton addTarget:self action:@selector(printButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-                    [printButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-                    [printButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-                    printButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-                    //printButton.backgroundColor = [UIColor grayColor];
-                    printButton.exclusiveTouch = YES;
-                    
-                    [self addSubview:printButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
-                }
-            }
-        }
+//        //get print enabled options
+//        BOOL toolbarOptionPrint = [[[options objectForKey: @"print"] objectForKey: @"enabled"] boolValue];
+//        NSLog(@"[pdfviewer] toolbar-options print: %d", toolbarOptionPrint);
+//        if (toolbarOptionPrint) {
+//            if ((document.canPrint == YES) && (document.password == nil)) // Document print enabled
+//            {
+//                Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
+//                
+//                if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable])
+//                {
+//                    rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
+//                    
+//                    UIButton *printButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//                    printButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+//                    [printButton setImage:[UIImage imageNamed:@"Reader-Print"] forState:UIControlStateNormal];
+//                    [printButton addTarget:self action:@selector(printButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//                    [printButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+//                    [printButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+//                    printButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//                    //printButton.backgroundColor = [UIColor grayColor];
+//                    printButton.exclusiveTouch = YES;
+//                    
+//                    [self addSubview:printButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
+//                }
+//            }
+//        }
         
-        //get open with enabled options
-        BOOL toolbarOptionOpenWith = [[[options objectForKey: @"openWith"] objectForKey: @"enabled"] boolValue];
-        NSLog(@"[pdfviewer] toolbar-options open with: %d", toolbarOptionOpenWith);
-        if (toolbarOptionOpenWith) {
-            if (document.canExport == YES) // Document export enabled
-            {
-                rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
-                
-                UIButton *exportButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                exportButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
-                [exportButton setImage:[UIImage imageNamed:@"Reader-Export"] forState:UIControlStateNormal];
-                [exportButton addTarget:self action:@selector(exportButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-                [exportButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-                [exportButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-                exportButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-                //exportButton.backgroundColor = [UIColor grayColor];
-                exportButton.exclusiveTouch = YES;
-                
-                [self addSubview:exportButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
-            }
-        }
+//        //get open with enabled options
+//        BOOL toolbarOptionOpenWith = [[[options objectForKey: @"openWith"] objectForKey: @"enabled"] boolValue];
+//        NSLog(@"[pdfviewer] toolbar-options open with: %d", toolbarOptionOpenWith);
+//        if (toolbarOptionOpenWith) {
+//            if (document.canExport == YES) // Document export enabled
+//            {
+//                rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
+//                
+//                UIButton *exportButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//                exportButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+//                [exportButton setImage:[UIImage imageNamed:@"Reader-Export"] forState:UIControlStateNormal];
+//                [exportButton addTarget:self action:@selector(exportButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//                [exportButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+//                [exportButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+//                exportButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//                //exportButton.backgroundColor = [UIColor grayColor];
+//                exportButton.exclusiveTouch = YES;
+//                
+//                [self addSubview:exportButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
+//            }
+//        }
         
         //view modes
-        UIImage *singlePageButton = [UIImage imageNamed:@"SDVReader-SinglePage"];
-        UIImage *doublePageButton = [UIImage imageNamed:@"SDVReader-DoublePage"];
-        UIImage *coverPageButton = [UIImage imageNamed:@"SDVReader-CoverPage"];
-        NSArray *buttonItems = [NSArray arrayWithObjects:singlePageButton, doublePageButton, coverPageButton, nil];
+//        UIImage *singlePageButton = [UIImage imageNamed:@"SDVReader-SinglePage"];
+//        UIImage *doublePageButton = [UIImage imageNamed:@"SDVReader-DoublePage"];
+//        UIImage *coverPageButton = [UIImage imageNamed:@"SDVReader-CoverPage"];
+//        NSArray *buttonItems = [NSArray arrayWithObjects:singlePageButton, doublePageButton, nil];
+//        
+//        BOOL useTint = [self respondsToSelector:@selector(tintColor)]; // iOS 7 and up
+//
+//        //don't show viewmode for single page documents
+//        if ([document.pageCount intValue] > 1)
+//        {
+//        rightButtonX -= (SHOW_CONTROL_WIDTH + buttonSpacing*2 + SHOW_CONTROL_WIDTH/2); // Next position
+//        
+//        UISegmentedControl *showControl = [[UISegmentedControl alloc] initWithItems:buttonItems];
+//        showControl.frame = CGRectMake(rightButtonX, BUTTON_Y, SHOW_CONTROL_WIDTH, BUTTON_HEIGHT);
+//        showControl.tintColor = ([UIColor colorWithWhite:0.8f alpha:1.0f]);
+//        showControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//        showControl.segmentedControlStyle = UISegmentedControlStyleBar;
+//        showControl.selectedSegmentIndex = 0; // Default segment index
+//        //showControl.backgroundColor = [UIColor grayColor];
+//        showControl.exclusiveTouch = YES;
+//        
+//        [showControl addTarget:self action:@selector(showControlTapped:) forControlEvents:UIControlEventValueChanged];
+//        
+//        [self addSubview:showControl];
+//        //adjust available width for document title
+//        titleWidth -= (SHOW_CONTROL_WIDTH + buttonSpacing);
+//        }
         
-        BOOL useTint = [self respondsToSelector:@selector(tintColor)]; // iOS 7 and up
-
-        //don't show viewmode for single page documents
-        if ([document.pageCount intValue] > 1)
-        {
-        rightButtonX -= (SHOW_CONTROL_WIDTH + buttonSpacing); // Next position
+        // BOOKMARK BUTTON
         
-        UISegmentedControl *showControl = [[UISegmentedControl alloc] initWithItems:buttonItems];
-        showControl.frame = CGRectMake(rightButtonX, BUTTON_Y, SHOW_CONTROL_WIDTH, BUTTON_HEIGHT);
-        showControl.tintColor = (useTint ? [UIColor blackColor] : [UIColor colorWithWhite:0.8f alpha:1.0f]);
-        showControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        showControl.segmentedControlStyle = UISegmentedControlStyleBar;
-        showControl.selectedSegmentIndex = 0; // Default segment index
-        //showControl.backgroundColor = [UIColor grayColor];
-        showControl.exclusiveTouch = YES;
+        // SHARE BUTTON
+        //get doneButtonText from options
+        CGFloat shareButtonWidth = (doneButtonWidth + TEXT_BUTTON_PADDING);
         
-        [showControl addTarget:self action:@selector(showControlTapped:) forControlEvents:UIControlEventValueChanged];
+        rightButtonX += buttonSpacing + iconButtonWidth;
         
-        [self addSubview:showControl];
-        //adjust available width for document title
-        titleWidth -= (SHOW_CONTROL_WIDTH + buttonSpacing);
-        }
+        UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        shareButton.frame = CGRectMake(rightButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
+        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [shareButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+        [shareButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+        [shareButton setImage:[UIImage imageNamed:@"shareButton.png"] forState:UIControlStateNormal];
+        shareButton.autoresizingMask = UIViewAutoresizingNone;
+        //doneButton.backgroundColor = [UIColor grayColor];
+        shareButton.exclusiveTouch = YES;
+        
+        [self addSubview:shareButton];
         
         if (largeDevice == YES) // Show document filename in toolbar
         {
@@ -335,6 +376,16 @@
 - (void)showControlTapped:(UISegmentedControl *)control
 {
     [self.delegate tappedInToolbar:self showControl:control];
+}
+
+- (void)shareButtonTapped:(UIButton *)button
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Share"
+                                                    message:@"Share Button Placeholder."
+                                                   delegate:self
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

@@ -36,7 +36,7 @@
 #define BUTTON_SPACE 8.0f
 #define BUTTON_HEIGHT 30.0f
 
-#define BUTTON_FONT_SIZE 15.0f
+#define BUTTON_FONT_SIZE 45.0f
 #define TEXT_BUTTON_PADDING 24.0f
 
 #define SHOW_CONTROL_WIDTH 78.0f
@@ -84,7 +84,7 @@
 
 		UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
-		[doneButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:1.0f] forState:UIControlStateNormal];
+		[doneButton setTitleColor:[UIColor colorWithWhite:0.8f alpha:1.0f] forState:UIControlStateNormal];
 		[doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateHighlighted];
 		[doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
 		[doneButton addTarget:self action:@selector(doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -110,7 +110,8 @@
 
 		UISegmentedControl *showControl = [[UISegmentedControl alloc] initWithItems:buttonItems];
 		showControl.frame = CGRectMake(showControlX, BUTTON_Y, SHOW_CONTROL_WIDTH, BUTTON_HEIGHT);
-		showControl.tintColor = (useTint ? [UIColor blackColor] : [UIColor colorWithWhite:0.8f alpha:1.0f]);
+//		showControl.tintColor = (useTint ? [UIColor blackColor] : [UIColor colorWithWhite:0.8f alpha:1.0f]);
+        showControl.backgroundColor = [UIColor blackColor];
 		showControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 		showControl.segmentedControlStyle = UISegmentedControlStyleBar;
 		showControl.selectedSegmentIndex = 0; // Default segment index
