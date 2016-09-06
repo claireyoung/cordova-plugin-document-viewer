@@ -15,6 +15,13 @@
 
 #import <MessageUI/MessageUI.h>
 
+@interface SDVReaderMainToolbar ()
+    @property (nonatomic) UIButton *shareButton;
+    @property (nonatomic) UIButton *doneButton;
+    @property (nonatomic) UILabel *titleLabel;
+@end
+
+
 @implementation SDVReaderMainToolbar
 
 #pragma mark - Constants
@@ -97,6 +104,8 @@
     
     if ((self = [super initWithFrame:frame document: document]))
     {
+        CGPoint viewOrigin = self.bounds.origin;
+        CGSize viewDimensions = self.bounds.size;
         CGFloat viewWidth = self.bounds.size.width; // Toolbar view width
         
 #if (READER_FLAT_UI == TRUE) // Option
@@ -139,7 +148,9 @@
         //doneButton.backgroundColor = [UIColor grayColor];
         doneButton.exclusiveTouch = YES;
         
+        self.doneButton = doneButton;
         [self addSubview:doneButton]; leftButtonX += (doneButtonWidth + buttonSpacing);
+        
         
         titleX += (doneButtonWidth + buttonSpacing); titleWidth -= (doneButtonWidth + buttonSpacing);
         
@@ -156,6 +167,9 @@
         [titleLabel setTextColor:[UIColor whiteColor]];
         [titleLabel setBackgroundColor:[UIColor blackColor]];
         [titleLabel setText:title];
+        
+        self.titleLabel = titleLabel;
+        
         [self addSubview:titleLabel];
 
         
@@ -324,12 +338,9 @@
         // BOOKMARK BUTTON
         
         // SHARE BUTTON
-        //get doneButtonText from options
-        CGFloat shareButtonWidth = (doneButtonWidth + TEXT_BUTTON_PADDING);
+        rightButtonX -= buttonSpacing + iconButtonWidth;
         
-        rightButtonX += buttonSpacing + iconButtonWidth;
-        
-        UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        UIButton* shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
         shareButton.frame = CGRectMake(rightButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [shareButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
@@ -338,6 +349,8 @@
         shareButton.autoresizingMask = UIViewAutoresizingNone;
         //doneButton.backgroundColor = [UIColor grayColor];
         shareButton.exclusiveTouch = YES;
+        
+        self.shareButton = shareButton;
         
         [self addSubview:shareButton];
         
@@ -369,6 +382,26 @@
     }
     
     return self;
+}
+
+- (void)resize
+{
+    CGRect viewFrame = self.frame;
+    CGFloat newFrameWidth = [self superview].frame.size.width;
+    
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newFrameWidth, self.frame.size.height);
+    
+    CGFloat rightButtonX = self.frame.size.width - (BUTTON_SPACE + ICON_BUTTON_WIDTH);
+    self.shareButton.frame = CGRectMake(rightButtonX, self.shareButton.frame.origin.y, self.shareButton.frame.size.width, self.shareButton.frame.size.height);
+    
+    CGFloat doneButtonWidth = (20 + TEXT_BUTTON_PADDING);
+    CGRect doneFrame = self.doneButton.frame;
+    self.doneButton.frame = CGRectMake(self.doneButton.frame.origin.x, self.doneButton.frame.origin.y, doneButtonWidth, BUTTON_HEIGHT);
+    
+    CGFloat center = self.frame.size.width/2;
+    CGFloat labelX = center - (self.titleLabel.frame.size.width/2);
+    self.titleLabel.frame = CGRectMake(labelX, self.titleLabel.frame.origin.y, self.titleLabel.frame.size.width, self.titleLabel.frame.size.height);
+    
 }
 
 #pragma mark - UISegmentedControl action methods

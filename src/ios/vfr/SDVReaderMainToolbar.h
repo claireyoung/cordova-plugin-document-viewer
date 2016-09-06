@@ -12,5 +12,6 @@
 @interface SDVReaderMainToolbar : ReaderMainToolbar
 
 - (instancetype)initWithFrame:(CGRect)frame document:(ReaderDocument *)document options:(NSDictionary *)options;
+- (void)resize;
 
 @end

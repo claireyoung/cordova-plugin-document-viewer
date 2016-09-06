@@ -981,6 +981,10 @@
         
         [mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
         
+        if ([mainToolbar isKindOfClass:[SDVReaderMainToolbar class]]) {
+            [(SDVReaderMainToolbar *)mainToolbar resize];
+        }
+        
         [mainPagebar updatePagebar]; // Update page bar
     }
 }
