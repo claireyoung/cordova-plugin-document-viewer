@@ -154,7 +154,7 @@
         
         titleX += (doneButtonWidth + buttonSpacing); titleWidth -= (doneButtonWidth + buttonSpacing);
         
-        NSString* title = @"Title Here";
+        NSString *title = [[options objectForKey: @"title"] objectForKey: @"title"];
         CGSize labelSize = [title sizeWithFont:doneButtonFont];
         CGFloat labelWidth = (labelSize.width + TEXT_BUTTON_PADDING);
         
@@ -166,8 +166,11 @@
 //        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [titleLabel setBackgroundColor:[UIColor blackColor]];
-        [titleLabel setText:title];
         
+        if (title != nil) {
+            [titleLabel setText:title];
+        }
+
         self.titleLabel = titleLabel;
         
         [self addSubview:titleLabel];
