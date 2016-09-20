@@ -72,11 +72,13 @@ function getOptions(provided)
 
     if (!options.page)
         options.page = {};
-
     if (!options.page.number)
         options.page.number = 1;
-    if (!options.page.articles)
-        options.page.articles = [];
+
+    if (!options.articles)
+        options.articles = {};
+    if (!options.articles.pages)
+        options.articles.pages = {};
 
     if (!options.title)
         options.title = {};
