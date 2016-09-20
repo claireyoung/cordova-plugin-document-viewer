@@ -71,9 +71,17 @@ function getOptions(provided)
         options.search.enabled = false;
 
     if (!options.page)
-        options.page = 1;
+        options.page = {};
+
     if (!options.page.number)
         options.page.number = 1;
+    if (!options.page.articles)
+        options.page.articles = [];
+
+    if (!options.title)
+        options.title = {};
+    if (!options.title.title)
+        options.title.title = "";
 
 
     if (!options.android)
