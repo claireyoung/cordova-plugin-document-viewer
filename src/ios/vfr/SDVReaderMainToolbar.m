@@ -166,10 +166,8 @@
 //        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [titleLabel setBackgroundColor:[UIColor blackColor]];
-        
-        if (title != nil) {
-            [titleLabel setText:title];
-        }
+        [titleLabel setText:title];
+
 
         self.titleLabel = titleLabel;
         

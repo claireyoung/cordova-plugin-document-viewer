@@ -15,8 +15,12 @@
 #import "SDVThumbsViewController.h"
 #import "SDVReaderMainPagebar.h"
 #import "SDVReaderContentViewDoublePage.h"
+#import "SwipeDismissAnimationController.h"
 
-@implementation SDVReaderViewController
+
+@implementation SDVReaderViewController {
+    SwipeDismissAnimationController* swipeDismissAnimationController;
+}
 
 #pragma mark - Constants
 
@@ -25,7 +29,7 @@
 #define STATUS_HEIGHT 20.0f
 
 #define TOOLBAR_HEIGHT 44.0f
-#define PAGEBAR_HEIGHT 48.0f
+#define PAGEBAR_HEIGHT 78.0f
 
 #define SCROLLVIEW_OUTSET_SMALL 4.0f
 #define SCROLLVIEW_OUTSET_LARGE 8.0f
@@ -37,6 +41,7 @@
 @synthesize viewerOptions;
 @synthesize pagesPerScreen;
 @synthesize viewMode;
+@synthesize delegate;
 
 #pragma mark - ReaderViewController methods
 
@@ -94,6 +99,7 @@
         
         currentPage = (int) ceil(nextCurrentPage);
         [self.delegate pageChanged:(int)currentPage];
+        [self updateArticleView];
         maximumPage = (int) ceil(maxPage);
     }
     
@@ -109,6 +115,28 @@
     [self updateContentViews:theScrollView];
     //Force recompute view
     [self showDocumentPage:futureCurrentPage forceRedraw:true];
+}
+
+-(BOOL)isCurrentPageArticle
+{
+    bool hasArticleElement = false;
+    NSArray* articlePages = [[self.viewerOptions objectForKey: @"articles"] objectForKey:@"pages"];
+    for (id articleElement in articlePages) {
+        
+        int intvalue = [articleElement intValue];
+        if ([articleElement intValue] == currentPage) {
+            return true;
+        }
+    }
+    return false;
+}
+
+-(void)updateArticleView
+{
+    if ([mainPagebar isKindOfClass:[SDVReaderMainPagebar class]]) {
+        SDVReaderMainPagebar* sdvPageBar = (SDVReaderMainPagebar *)mainPagebar;
+        [sdvPageBar showSwipeForArticleViewLabel:[self isCurrentPageArticle]];
+    }
 }
 
 //  override addContentView to use single or double page
@@ -400,7 +428,8 @@
     {
         currentPage = page;
         [self.delegate pageChanged:(int)currentPage];
-
+        [self updateArticleView];
+        
         document.pageNumber = [NSNumber numberWithInteger:page];
         
         [contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
@@ -963,6 +992,7 @@
         
         currentPage = page;
         [self.delegate pageChanged:(int)currentPage];
+        [self updateArticleView];
         document.pageNumber = [NSNumber numberWithInteger:page];
         
         CGPoint contentOffset = CGPointMake((theScrollView.bounds.size.width * (renderPage - 1)), 0.0f);
@@ -1101,7 +1131,7 @@
     contentViews = [NSMutableDictionary new]; lastHideTime = [NSDate date];
     
     minimumPage = 1; maximumPage = [document.pageCount integerValue];
-    
+        
     NSDictionary* pageOptions = [self.viewerOptions objectForKey: @"page"];
     if (pageOptions != nil) {
         NSInteger pageNumber = [[pageOptions objectForKey: @"number"] integerValue];
@@ -1110,6 +1140,30 @@
         [self showDocumentPage:1];
     }
     
+}
+
+-(void)handlePan:(UIPanGestureRecognizer *)recognizer
+{
+    if (! [self isCurrentPageArticle]) {
+        return;
+    }
+    
+    CGPoint velocity = [recognizer velocityInView:self.view];
+    CGPoint interval = [recognizer translationInView:self.view];
+    if (recognizer.state == UIGestureRecognizerStateEnded ||
+        recognizer.state == UIGestureRecognizerStateChanged)
+    {
+        NSLog(@"Speed x %f, y %f", velocity.x, velocity.y);
+        
+        // interval -80 is the width of my thumb
+        // velocity -500 is the slowest we accept the view to pan
+        if (velocity.y < -500 && interval.y < -80) {
+            swipeDismissAnimationController = [[SwipeDismissAnimationController alloc] init];
+            swipeDismissAnimationController.velocity = velocity;
+            self.transitioningDelegate = self;
+            [delegate dismissReaderViewController:self];
+        }
+    }
 }
 
 // show status bar
@@ -1514,6 +1568,13 @@
         [mainPagebar hidePagebar]; // Show
     }
     
+}
+
+
+#pragma mark UIViewControllerTransitioningDelegate
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    swipeDismissAnimationController.destinationFrame = self.view.frame;
+    return swipeDismissAnimationController;
 }
 
 @end

@@ -31,5 +31,10 @@
     }
 }
 
+- (void)showSwipeForArticleViewLabel:(BOOL)show
+{
+    swipeForArticleView.hidden = !show;
+}
+
 
 @end

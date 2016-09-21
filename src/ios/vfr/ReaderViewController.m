@@ -31,7 +31,6 @@
 #import "ReaderContentView.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbQueue.h"
-#import "SwipeDismissAnimationController.h"
 
 
 #import <MessageUI/MessageUI.h>
@@ -40,9 +39,7 @@
 									ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelegate, UIViewControllerTransitioningDelegate>
 @end
 
-@implementation ReaderViewController {
-    SwipeDismissAnimationController* swipeDismissAnimationController;
-}
+@implementation ReaderViewController
 
 #pragma mark - Constants
 
@@ -539,26 +536,6 @@
     [delegate dismissReaderViewController:self];
 }
 
--(void)handlePan:(UIPanGestureRecognizer *)recognizer
-{
-    CGPoint velocity = [recognizer velocityInView:self.view];
-    CGPoint interval = [recognizer translationInView:self.view];
-    if (recognizer.state == UIGestureRecognizerStateEnded ||
-        recognizer.state == UIGestureRecognizerStateChanged)
-    {
-        NSLog(@"Speed x %f, y %f", velocity.x, velocity.y);
-
-        // interval -80 is the width of my thumb
-        // velocity -500 is the slowest we accept the view to pan
-        if (velocity.y < -500 && interval.y < -80) {
-            swipeDismissAnimationController = [[SwipeDismissAnimationController alloc] init];
-            swipeDismissAnimationController.velocity = velocity;
-            self.transitioningDelegate = self;
-            [delegate dismissReaderViewController:self];
-        }
-    }
-}
-
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer
 {
@@ -909,12 +886,6 @@
 	[document archiveDocumentProperties]; // Save any ReaderDocument changes
 
 	if (userInterfaceIdiom == UIUserInterfaceIdiomPad) if (printInteraction != nil) [printInteraction dismissAnimated:NO];
-}
-
-#pragma mark UIViewControllerTransitioningDelegate
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    swipeDismissAnimationController.destinationFrame = self.view.frame;
-    return swipeDismissAnimationController;
 }
 
 @end
