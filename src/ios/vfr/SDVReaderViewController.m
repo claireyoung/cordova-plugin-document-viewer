@@ -16,7 +16,8 @@
 #import "SDVReaderMainPagebar.h"
 #import "SDVReaderContentViewDoublePage.h"
 #import "SwipeDismissAnimationController.h"
-
+#import "ReaderThumbQueue.h"
+#import "ReaderThumbCache.h"
 
 @implementation SDVReaderViewController {
     SwipeDismissAnimationController* swipeDismissAnimationController;
@@ -1163,6 +1164,26 @@
             self.transitioningDelegate = self;
             [delegate dismissReaderViewController:self];
         }
+    }
+}
+
+- (void)closeDocument
+{
+    if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+    
+    [document archiveDocumentProperties]; // Save any ReaderDocument changes
+    
+    [[ReaderThumbQueue sharedInstance] cancelOperationsWithGUID:document.guid];
+    
+    [[ReaderThumbCache sharedInstance] removeAllObjects]; // Empty the thumb cache
+    
+    if ([delegate respondsToSelector:@selector(dismissReaderViewController:)] == YES)
+    {
+        [delegate dismissReaderViewController:self]; // Dismiss the ReaderViewController
+    }
+    else // We have a "Delegate must respond to -dismissReaderViewController:" error
+    {
+        NSAssert(NO, @"Delegate must respond to -dismissReaderViewController:");
     }
 }
 
