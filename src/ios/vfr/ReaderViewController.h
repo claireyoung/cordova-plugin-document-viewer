@@ -33,7 +33,7 @@
 
 @protocol ReaderViewControllerDelegate <NSObject>
 
-@optional // Delegate protocols
+@required // Delegate protocols
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController;
 - (void)pageChanged:(int)newPage;

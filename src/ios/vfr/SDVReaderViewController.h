@@ -23,6 +23,8 @@ typedef enum
 @property NSMutableDictionary *viewerOptions;
 @property int pagesPerScreen;
 @property SDVReaderContentViewMode viewMode;
+@property BOOL closedOnDone;
+
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object options:(NSMutableDictionary *)options;
 

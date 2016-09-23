@@ -171,10 +171,16 @@
                                     nil, @"message",
                                     nil, @"missingAppId",
                                     nil, @"pageNumber",
+                                    nil, @"closedOnDone",
                                     nil
                                     ];
+    
     [jsonObj setObject:[NSNumber numberWithInt:CDVCommandStatus_NO_RESULT]  forKey:@"status"];
     [jsonObj setObject:[NSNumber numberWithInteger:pageNumber] forKey:@"pageNumber"];
+    
+    if ([viewController isKindOfClass:[SDVReaderViewController class]]) {
+        [jsonObj setObject:[NSNumber numberWithBool:((SDVReaderViewController *)viewController).closedOnDone] forKey:@"closedOnDone"];
+    }
     //result status has to be OK, otherwise the cordova success callback will not be called
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:tmpCommandCallbackID];

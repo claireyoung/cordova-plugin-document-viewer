@@ -1162,12 +1162,13 @@
             swipeDismissAnimationController = [[SwipeDismissAnimationController alloc] init];
             swipeDismissAnimationController.velocity = velocity;
             self.transitioningDelegate = self;
+            self.closedOnDone = NO;
             [delegate dismissReaderViewController:self];
         }
     }
 }
 
-- (void)closeDocument
+- (void)closeDocumentBackButton
 {
     if (printInteraction != nil) [printInteraction dismissAnimated:NO];
     
@@ -1179,6 +1180,7 @@
     
     if ([delegate respondsToSelector:@selector(dismissReaderViewController:)] == YES)
     {
+        self.closedOnDone = YES;
         [delegate dismissReaderViewController:self]; // Dismiss the ReaderViewController
     }
     else // We have a "Delegate must respond to -dismissReaderViewController:" error
@@ -1507,6 +1509,16 @@
 #pragma mark - ReaderContentViewDelegate methods
 
 #pragma mark - ReaderMainToolbarDelegate methods
+
+// Override when the Done button is tpaped
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIButton *)button
+{
+#if (READER_STANDALONE == FALSE) // Option
+    
+    [self closeDocumentBackButton]; // Close ReaderViewController
+    
+#endif // end of READER_STANDALONE Option
+}
 
 //  override thumbsButton/ThumbsViewController
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIButton *)button
