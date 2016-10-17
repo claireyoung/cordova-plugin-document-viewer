@@ -229,21 +229,17 @@ var SitewaertsDocumentViewer = {
 
     viewDocument: function (url, contentType, options, onShow, onClose, onMissingApp, onError, currentPageCallback)
     {
-        var me = this;
         var errorPrefix = "Error in " + JS_HANDLE + ".viewDocument(): ";
         try
         {
             options = getOptions(options);
+            var me = this;
+            console.log("This is ", this);
+            console.log("Me is ", me);
 
             if (!options.title)
                 options.title = url.split('/').pop(); // strip file name from url
 
-            this.canViewDocument(
-                    url,
-                    contentType,
-                    options,
-                    function ()
-                    {
                         exec(
                                 function (result)
                                 {
@@ -287,26 +283,7 @@ var SitewaertsDocumentViewer = {
                                     {url: url, contentType: contentType, options: options}
                                 ]
                         );
-                    },
-                    function (appId, installer)
-                    {
-                        if (onMissingApp)
-                            onMissingApp(appId, installer);
-                        else
-                            installer(function ()
-                            {
-                                window.console.log("App successfully installed");
-                            }, onError);
-                    },
-                    function ()
-                    {
-                        var errorMsg = "No viewer for " + contentType;
-                        window.console.log(errorPrefix + errorMsg);
-                        if (onError)
-                            onError(errorMsg);
-                    },
-                    onError
-            );
+                    
 
 
         }
