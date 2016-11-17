@@ -132,18 +132,40 @@
 //        NSLog(@"[pdfviewer] toolbar-options close label: %@", toolbarOptionCloseLabel);
 //        NSString *doneButtonText = toolbarOptionCloseLabel?:NSLocalizedString(@"Done", @"button");
 //        CGSize doneButtonSize = [doneButtonText sizeWithFont:doneButtonFont];
-        CGFloat doneButtonWidth = (20 + TEXT_BUTTON_PADDING);
+        CGFloat doneButtonWidth = (80 + TEXT_BUTTON_PADDING);
         
         UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        
         doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
-        [doneButton setTitleColor:[UIColor colorWithWhite:0.8f alpha:1.0f] forState:UIControlStateNormal];
-        [doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateHighlighted];
-//        [doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
+        
+        // Now load the image and create the image view
+        UIImage *image = [UIImage imageNamed:@"backButton.png"];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(4, 4, BUTTON_HEIGHT-8, BUTTON_HEIGHT-8)];
+        [imageView setImage:image];
+        // Create the label and set its text
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(BUTTON_HEIGHT-5, 0, 40, BUTTON_HEIGHT)];
+        [label setTextColor:[UIColor colorWithWhite:1.0f alpha:1.0f]];
+        [label setText:@"Exit"];
+
+        // Put it all together
+        [doneButton addSubview:label];
+        [doneButton addSubview:imageView];
+        
+        
+//        
+//        [doneButton setTitle:@"Exit" forState:UIControlStateNormal];
+//        [doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateNormal];
+////        [doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateHighlighted];
+////        [doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
         [doneButton addTarget:self action:@selector(doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [doneButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-        [doneButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-        [doneButton setImage:[UIImage imageNamed:@"backButton.png"] forState:UIControlStateNormal];
-//        doneButton.autoresizingMask = UIViewAutoresizingNone;
+////        [doneButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+////        [doneButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+//        [doneButton setImage:[UIImage imageNamed:@"backButton.png"] forState:UIControlStateNormal];
+//        doneButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 5.0, 5.0);
+//        doneButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+
+        
+        //        doneButton.autoresizingMask = UIViewAutoresizingNone;
         doneButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         //doneButton.backgroundColor = [UIColor grayColor];
         doneButton.exclusiveTouch = YES;
@@ -338,22 +360,22 @@
         
         // BOOKMARK BUTTON
         
-        // SHARE BUTTON
-        rightButtonX -= buttonSpacing + iconButtonWidth;
-        
-        UIButton* shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        shareButton.frame = CGRectMake(rightButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
-        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [shareButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-        [shareButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-        [shareButton setImage:[UIImage imageNamed:@"shareButton.png"] forState:UIControlStateNormal];
-        shareButton.autoresizingMask = UIViewAutoresizingNone;
-        //doneButton.backgroundColor = [UIColor grayColor];
-        shareButton.exclusiveTouch = YES;
-        
-        self.shareButton = shareButton;
-        
-        [self addSubview:shareButton];
+//        // SHARE BUTTON
+//        rightButtonX -= buttonSpacing + iconButtonWidth;
+//        
+//        UIButton* shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        shareButton.frame = CGRectMake(rightButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
+//        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//        [shareButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+//        [shareButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+//        [shareButton setImage:[UIImage imageNamed:@"shareButton.png"] forState:UIControlStateNormal];
+//        shareButton.autoresizingMask = UIViewAutoresizingNone;
+//        //doneButton.backgroundColor = [UIColor grayColor];
+//        shareButton.exclusiveTouch = YES;
+//        
+//        self.shareButton = shareButton;
+//        
+//        [self addSubview:shareButton];
         
         if (largeDevice == YES) // Show document filename in toolbar
         {
