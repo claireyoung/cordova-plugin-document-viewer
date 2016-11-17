@@ -221,7 +221,7 @@
         CGRect articleTextRect = CGRectInset(swipeForArticleView.bounds, 4.0f, 2.0f); // Inset the text a bit
         
         UILabel* articleTextLabel = [[UILabel alloc] initWithFrame:articleTextRect]; // Page numbers label
-        articleTextLabel.text = @"Swipe up for Article View!";
+        articleTextLabel.text = @"Swipe up for Reader View";
         
         articleTextLabel.autoresizesSubviews = NO;
         articleTextLabel.autoresizingMask = UIViewAutoresizingNone;
