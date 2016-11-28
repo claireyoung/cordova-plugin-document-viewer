@@ -377,31 +377,31 @@
 //        
 //        [self addSubview:shareButton];
         
-        if (largeDevice == YES) // Show document filename in toolbar
-        {
-            CGRect titleRect = CGRectMake(titleX, BUTTON_Y, titleWidth, TITLE_HEIGHT);
-            
-            UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleRect];
-            
-            titleLabel.textAlignment = NSTextAlignmentCenter;
-            titleLabel.font = [UIFont systemFontOfSize:TITLE_FONT_SIZE];
-            titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-            titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-            titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
-            titleLabel.backgroundColor = [UIColor clearColor];
-            titleLabel.adjustsFontSizeToFitWidth = YES;
-            titleLabel.minimumScaleFactor = 0.75f;
-            //get title from options
-            NSString *toolbarOptionTitle = [options objectForKey: @"title"];
-            NSLog(@"[pdfviewer] toolbar-options title label: %@", toolbarOptionTitle);
-            titleLabel.text = toolbarOptionTitle?:[document.fileName stringByDeletingPathExtension];
-#if (READER_FLAT_UI == FALSE) // Option
-            titleLabel.shadowColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
-            titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-#endif // end of READER_FLAT_UI Option
-            
-            [self addSubview:titleLabel];
-        }
+//        if (largeDevice == YES) // Show document filename in toolbar
+//        {
+//            CGRect titleRect = CGRectMake(titleX, BUTTON_Y, titleWidth, TITLE_HEIGHT);
+//            
+//            UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleRect];
+//            
+//            titleLabel.textAlignment = NSTextAlignmentCenter;
+//            titleLabel.font = [UIFont systemFontOfSize:TITLE_FONT_SIZE];
+//            titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//            titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+//            titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
+//            titleLabel.backgroundColor = [UIColor clearColor];
+//            titleLabel.adjustsFontSizeToFitWidth = YES;
+//            titleLabel.minimumScaleFactor = 0.75f;
+//            //get title from options
+//            NSString *toolbarOptionTitle = [options objectForKey: @"title"];
+//            NSLog(@"[pdfviewer] toolbar-options title label: %@", toolbarOptionTitle);
+//            titleLabel.text = toolbarOptionTitle?:[document.fileName stringByDeletingPathExtension];
+//#if (READER_FLAT_UI == FALSE) // Option
+//            titleLabel.shadowColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
+//            titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+//#endif // end of READER_FLAT_UI Option
+//            
+//            [self addSubview:titleLabel];
+//        }
     }
     
     return self;
