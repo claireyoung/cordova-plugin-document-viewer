@@ -133,9 +133,9 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source, CGFloat bf
                 
             containerFrame = CGRectMake(theContentPage.frame.origin.x, theContentPage.frame.origin.y, theContentPage.frame.size.width*2, theContentPage.frame.size.height);
         
-            //border in the center
-            UIView *centerBorder = [[UIView alloc] initWithFrame:CGRectMake(theContentPage.frame.size.width - 1.0f, theContentPage1.frame.origin.y, 2.0f, theContentPage.frame.size.height)];
-            centerBorder.backgroundColor = [UIColor grayColor];
+//            //border in the center
+//            UIView *centerBorder = [[UIView alloc] initWithFrame:CGRectMake(theContentPage.frame.size.width - 1.0f, theContentPage1.frame.origin.y, 2.0f, theContentPage.frame.size.height)];
+//            centerBorder.backgroundColor = [UIColor grayColor];
             
 //            theContainerView = [[UIView alloc] initWithFrame:CGRectMake(theContentPage.frame.origin.x, theContentPage.frame.origin.y, theContentPage.frame.size.width*2, theContentPage.frame.size.height)];
             theContainerView = [[UIView alloc] initWithFrame:containerFrame];
@@ -204,10 +204,10 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source, CGFloat bf
                 {
                     [theContainerView addSubview:theContentPage];
                     [theContainerView addSubview:theContentPage1];// Add the content view to the container view
-                    //border in the center
-                    UIView *centerBorder = [[UIView alloc] initWithFrame:CGRectMake(theContentPage.frame.size.width - 1.0f, theContentPage1.frame.origin.y, 2.0f, theContentPage.frame.size.height)];
-                    centerBorder.backgroundColor = [UIColor grayColor];
-                    [theContainerView addSubview:centerBorder];
+//                    //border in the center
+//                    UIView *centerBorder = [[UIView alloc] initWithFrame:CGRectMake(theContentPage.frame.size.width - 1.0f, theContentPage1.frame.origin.y, 2.0f, theContentPage.frame.size.height)];
+//                    centerBorder.backgroundColor = [UIColor grayColor];
+//                    [theContainerView addSubview:centerBorder];
                     break;
 				}
             }
