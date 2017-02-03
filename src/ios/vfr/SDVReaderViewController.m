@@ -21,6 +21,7 @@
 
 @implementation SDVReaderViewController {
     SwipeDismissAnimationController* swipeDismissAnimationController;
+    NSTimer* readerViewTimer;
 }
 
 #pragma mark - Constants
@@ -137,7 +138,48 @@
     if ([mainPagebar isKindOfClass:[SDVReaderMainPagebar class]]) {
         SDVReaderMainPagebar* sdvPageBar = (SDVReaderMainPagebar *)mainPagebar;
         [sdvPageBar showSwipeForArticleViewLabel:[self isCurrentPageArticle]];
+        
+        if ([self isCurrentPageArticle]) {
+            [self showReaderViewSwipe];
+        } else {
+            [self hideReaderViewSwipe];
+        }
     }
+}
+
+-(void)hideReaderViewSwipe
+{
+    [UIView animateWithDuration:2.0 delay:0.0
+        options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
+                     animations:^(void)
+        {
+            swipeForArticleView.alpha = 0.0f;
+        }
+        completion:^(BOOL finished)
+        {
+            swipeForArticleView.hidden = YES;
+            swipeForArticleView.alpha = 1.0f;
+        }
+     ];
+    
+    if (readerViewTimer != nil) {
+        [readerViewTimer invalidate];
+    }
+}
+
+-(void)showReaderViewSwipe
+{
+    swipeForArticleView.alpha = 1.0f;
+    swipeForArticleView.hidden = NO;
+    
+    if (readerViewTimer != nil) {
+        [readerViewTimer invalidate];
+    }
+    readerViewTimer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                       target:self
+                                                     selector:@selector(hideReaderViewSwipe)
+                                                     userInfo:nil
+                                                      repeats:NO];
 }
 
 //  override addContentView to use single or double page
@@ -388,6 +430,45 @@
 //         ];
 //    }
 //}
+
+-(void)addSwipeUpForReaderView
+{
+    CGFloat screenWidth = self.view.frame.size.width;
+    CGRect theFrame = self.view.frame;
+    CGRect swipeRect = CGRectMake(screenWidth/4, STATUS_HEIGHT*3 + 10, screenWidth/2.0, STATUS_HEIGHT);
+    swipeForArticleView = [[UIView alloc] initWithFrame:swipeRect];
+    
+    swipeForArticleView.autoresizesSubviews = NO;
+    swipeForArticleView.userInteractionEnabled = NO;
+    swipeForArticleView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    swipeForArticleView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
+    
+    swipeForArticleView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    swipeForArticleView.layer.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.6f].CGColor;
+    swipeForArticleView.layer.shadowPath = [UIBezierPath bezierPathWithRect:swipeForArticleView.bounds].CGPath;
+    swipeForArticleView.layer.shadowRadius = 2.0f; swipeForArticleView.layer.shadowOpacity = 1.0f;
+    
+    CGRect articleTextRect = CGRectInset(swipeForArticleView.bounds, 4.0f, 2.0f); // Inset the text a bit
+    
+    UILabel* articleTextLabel = [[UILabel alloc] initWithFrame:articleTextRect]; // Page numbers label
+    articleTextLabel.text = @"Swipe up for Reader View";
+    
+    articleTextLabel.autoresizesSubviews = NO;
+    articleTextLabel.autoresizingMask = UIViewAutoresizingNone;
+    articleTextLabel.textAlignment = NSTextAlignmentCenter;
+    articleTextLabel.backgroundColor = [UIColor clearColor];
+    articleTextLabel.textColor = [UIColor whiteColor];
+    articleTextLabel.font = [UIFont systemFontOfSize:16.0f];
+    articleTextLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    articleTextLabel.shadowColor = [UIColor blackColor];
+    articleTextLabel.adjustsFontSizeToFitWidth = YES;
+    articleTextLabel.minimumScaleFactor = 0.75f;
+    
+    [swipeForArticleView addSubview:articleTextLabel]; // Add label view
+    
+    [self.view addSubview:swipeForArticleView]; // swipe for article text.
+
+}
 
 // individual page number calculations on scroll for double page modes
 - (void)handleScrollViewDidEnd:(UIScrollView *)scrollView
@@ -1087,6 +1168,9 @@
     theScrollView.backgroundColor = [UIColor blackColor]; theScrollView.delegate = self;
     [self.view addSubview:theScrollView];
     
+    // Add Swipe View
+    [self addSwipeUpForReaderView];
+    
     CGRect toolbarRect = viewRect; toolbarRect.size.height = TOOLBAR_HEIGHT;
 //    mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect document:document]; // ReaderMainToolbar
     mainToolbar = [[SDVReaderMainToolbar alloc] initWithFrame:toolbarRect document:document options:self.viewerOptions]; // customised ReaderMainToolbar
@@ -1507,6 +1591,20 @@
 }
 
 #pragma mark - ReaderContentViewDelegate methods
+
+-(void)scrollViewEndedZoomingWithScrollView:(UIScrollView *)view atScale:(CGFloat)scale;
+{
+    // hide/show the swipe for article view based on zoom scale.
+    if (scale == view.minimumZoomScale) {
+        if ([self isCurrentPageArticle]) {
+            [self showReaderViewSwipe];
+        } else {
+            [self hideReaderViewSwipe];
+        }
+    } else {
+        swipeForArticleView.hidden = true;
+    }
+}
 
 #pragma mark - ReaderMainToolbarDelegate methods
 

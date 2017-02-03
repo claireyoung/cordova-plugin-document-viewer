@@ -19,7 +19,9 @@ typedef enum
     SDVReaderContentViewModeCoverDoublePage
 } SDVReaderContentViewMode;
 
-@interface SDVReaderViewController : ReaderViewController
+@interface SDVReaderViewController : ReaderViewController {
+    UIView *swipeForArticleView;
+}
 @property NSMutableDictionary *viewerOptions;
 @property int pagesPerScreen;
 @property SDVReaderContentViewMode viewMode;
