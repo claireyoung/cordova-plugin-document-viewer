@@ -11,6 +11,4 @@
 
 @interface SDVReaderMainPagebar : ReaderMainPagebar
 
-- (void)showSwipeForArticleViewLabel:(BOOL)show;
-
 @end
