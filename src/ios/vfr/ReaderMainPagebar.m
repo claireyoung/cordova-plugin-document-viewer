@@ -205,38 +205,6 @@
         
         [self addSubview:pageNumberView]; // Add page numbers display view
         
-        CGRect swipeRect = CGRectMake(numberRect.origin.x - (numberRect.size.width /2), numberRect.origin.y + 3 + numberRect.size.height, numberRect.size.width * 2.0, numberRect.size.height);
-        swipeForArticleView = [[UIView alloc] initWithFrame:swipeRect];
-        
-        swipeForArticleView.autoresizesSubviews = NO;
-        swipeForArticleView.userInteractionEnabled = NO;
-        swipeForArticleView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        swipeForArticleView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
-        
-        swipeForArticleView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-        swipeForArticleView.layer.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.6f].CGColor;
-        swipeForArticleView.layer.shadowPath = [UIBezierPath bezierPathWithRect:pageNumberView.bounds].CGPath;
-        swipeForArticleView.layer.shadowRadius = 2.0f; swipeForArticleView.layer.shadowOpacity = 1.0f;
-        
-        CGRect articleTextRect = CGRectInset(swipeForArticleView.bounds, 4.0f, 2.0f); // Inset the text a bit
-        
-        UILabel* articleTextLabel = [[UILabel alloc] initWithFrame:articleTextRect]; // Page numbers label
-        articleTextLabel.text = @"Swipe up for Reader View";
-        
-        articleTextLabel.autoresizesSubviews = NO;
-        articleTextLabel.autoresizingMask = UIViewAutoresizingNone;
-        articleTextLabel.textAlignment = NSTextAlignmentCenter;
-        articleTextLabel.backgroundColor = [UIColor clearColor];
-        articleTextLabel.textColor = [UIColor whiteColor];
-        articleTextLabel.font = [UIFont systemFontOfSize:16.0f];
-        articleTextLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-        articleTextLabel.shadowColor = [UIColor blackColor];
-        articleTextLabel.adjustsFontSizeToFitWidth = YES;
-        articleTextLabel.minimumScaleFactor = 0.75f;
-        
-        [swipeForArticleView addSubview:articleTextLabel]; // Add label view
-        
-        [self addSubview:swipeForArticleView]; // swipe for article text.
 
 		trackControl = [[ReaderTrackControl alloc] initWithFrame:self.bounds]; // Track control view
 

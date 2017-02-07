@@ -54,8 +54,6 @@
     
     UIView *pageNumberView;
     
-    UIView *swipeForArticleView;
-    
     NSTimer *enableTimer;
     NSTimer *trackTimer;
 }

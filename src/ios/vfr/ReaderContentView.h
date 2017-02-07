@@ -37,6 +37,10 @@
 
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches;
 
+@optional
+
+-(void)scrollViewEndedZoomingWithScrollView:(UIScrollView *)view atScale:(CGFloat)scale;
+
 @end
 
 @interface ReaderContentView : UIScrollView
