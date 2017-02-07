@@ -1142,7 +1142,7 @@
     
     // Add Swipe View
     CGRect swipeViewRect = viewRect;
-    swipeViewRect.size.height = TOOLBAR_HEIGHT;
+    swipeViewRect.size.height = TOOLBAR_HEIGHT*0.75;
     CGFloat screenWidth = self.view.frame.size.width;
     swipeViewRect.origin.y = TOOLBAR_HEIGHT * 2;
     swipeViewRect.origin.x = screenWidth/4;
