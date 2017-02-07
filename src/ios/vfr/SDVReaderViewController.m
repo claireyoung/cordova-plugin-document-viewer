@@ -141,10 +141,7 @@
         if ([self isCurrentPageArticle]) {
             [self showReaderViewSwipe];
         } else {
-            if (readerViewTimer != nil) {
-                [readerViewTimer invalidate];
-                readerViewTimer = nil;
-            }
+            [self invalidateTimer];
             swipeForArticleView.hidden = YES;
         }
     }
@@ -165,6 +162,11 @@
         }
      ];
     
+    [self invalidateTimer];
+}
+
+-(void)invalidateTimer
+{
     if (readerViewTimer != nil) {
         [readerViewTimer invalidate];
         readerViewTimer = nil;
@@ -176,10 +178,7 @@
     swipeForArticleView.alpha = 1.0f;
     swipeForArticleView.hidden = NO;
     
-    if (readerViewTimer != nil) {
-        [readerViewTimer invalidate];
-        readerViewTimer = nil;
-    }
+    [self invalidateTimer];
     readerViewTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
                                                        target:self
                                                      selector:@selector(hideReaderViewSwipe)
