@@ -38,6 +38,8 @@
 
 #define TAP_AREA_SIZE 48.0f
 
+#define MAX_PREVIEW_PAGE 10
+
 //TODO understand how delegation works and why this works if it is not synthesized although none of the delegation stuff of the superclass is in the public header
 //@synthesize delegate;
 @synthesize viewerOptions;
@@ -100,7 +102,6 @@
         }
         
         currentPage = (int) ceil(nextCurrentPage);
-        [self.delegate pageChanged:(int)currentPage];
         [self updateArticleView];
         maximumPage = (int) ceil(maxPage);
     }
@@ -435,8 +436,18 @@
 //    }
 //}
 
-// individual page number calculations on scroll for double page modes
-- (void)handleScrollViewDidEnd:(UIScrollView *)scrollView
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSInteger page = [self calculatePage:scrollView];
+    if ( page > MAX_PREVIEW_PAGE) {
+        [self closePageForPreview:page]; // close page, if preview.
+    }
+    
+    if (ignoreDidScroll == NO) [self layoutContentViews:scrollView];
+    
+}
+
+- (NSInteger)calculatePage:(UIScrollView *)scrollView
 {
     CGFloat viewWidth = scrollView.bounds.size.width; // Scroll view width
     
@@ -453,23 +464,13 @@
         page = (page<[document.pageCount integerValue]?page:[document.pageCount integerValue]);
     }
     
-    
-//    NSInteger page;
-//    switch (self.viewMode) {
-//        case SDVReaderContentViewModeDoublePage:
-//            page = (contentOffsetX / viewWidth) * 2 - 1; page+=2; // Page number
-//            break;
-//        case SDVReaderContentViewModeCoverDoublePage:
-//            page = (contentOffsetX / viewWidth) * 2; // Page number
-//            if (page==0) {
-//                page += 1;
-//            }
-//            break;
-//            
-//        default:
-//            page = (contentOffsetX / viewWidth); page++; // Page number
-//            break;
-//    }
+    return page;
+}
+
+// individual page number calculations on scroll for double page modes
+- (void)handleScrollViewDidEnd:(UIScrollView *)scrollView
+{
+    NSInteger page = [self calculatePage:scrollView];
     
     if (page != currentPage) // Only if on different page
     {
@@ -489,6 +490,20 @@
         [mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
         
         [mainPagebar updatePagebar]; // Update page bar
+
+        [self closePageForPreview:currentPage]; // close page, if preview.
+    }
+}
+
+-(void)closePageForPreview:(int)page
+{
+    BOOL isPreview = [[viewerOptions objectForKey:@"isPreview"] objectForKey:@"isPreview"];
+    if (isPreview && page > MAX_PREVIEW_PAGE) {
+        if ([delegate respondsToSelector:@selector(dismissReaderViewController:)] == YES)
+        {
+            self.closedOnDone = SDVReaderClosedOnPreview;
+            [delegate dismissReaderViewController:self]; // Dismiss the ReaderViewController
+        }
     }
 }
 
@@ -1037,6 +1052,8 @@
     {
         if ((renderPage < minimumPage) || (renderPage > maximumPage)) return;
         
+        int previousPage = (int)currentPage;
+        
         currentPage = page;
         [self.delegate pageChanged:(int)currentPage];
         [self updateArticleView];
@@ -1063,6 +1080,7 @@
         }
         
         [mainPagebar updatePagebar]; // Update page bar
+        [self closePageForPreview:currentPage];
     }
 }
 
@@ -1221,6 +1239,10 @@
     NSDictionary* pageOptions = [self.viewerOptions objectForKey: @"page"];
     if (pageOptions != nil) {
         NSInteger pageNumber = [[pageOptions objectForKey: @"number"] integerValue];
+        BOOL isPreview = [[viewerOptions objectForKey:@"isPreview"] objectForKey:@"isPreview"];
+        if (pageNumber > MAX_PREVIEW_PAGE && isPreview) {
+            pageNumber = MAX_PREVIEW_PAGE;
+        }
         [self showDocumentPage:pageNumber];
     } else {
         [self showDocumentPage:1];
@@ -1247,7 +1269,7 @@
             swipeDismissAnimationController = [[SwipeDismissAnimationController alloc] init];
             swipeDismissAnimationController.velocity = velocity;
             self.transitioningDelegate = self;
-            self.closedOnDone = NO;
+            self.closedOnDone = SDVReaderClosedOnSwipe;
             [delegate dismissReaderViewController:self];
         }
     }
@@ -1265,7 +1287,7 @@
     
     if ([delegate respondsToSelector:@selector(dismissReaderViewController:)] == YES)
     {
-        self.closedOnDone = YES;
+        self.closedOnDone = SDVReaderClosedOnDone;
         [delegate dismissReaderViewController:self]; // Dismiss the ReaderViewController
     }
     else // We have a "Delegate must respond to -dismissReaderViewController:" error

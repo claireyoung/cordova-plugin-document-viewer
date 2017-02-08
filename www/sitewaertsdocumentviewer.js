@@ -64,7 +64,6 @@ function getOptions(provided)
     if (!options.bookmarks.enabled)
         options.bookmarks.enabled = false;
 
-
     if (!options.search)
         options.search = {};
     if (!options.search.enabled)
@@ -84,6 +83,11 @@ function getOptions(provided)
         options.title = {};
     if (!options.title.title)
         options.title.title = "";
+
+    if (!options.isPreview)
+        options.isPreview = {};
+    if (!options.isPreview.isPreview)
+        options.isPreview.isPreview = false;
 
 
     if (!options.android)
