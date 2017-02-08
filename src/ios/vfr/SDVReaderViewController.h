@@ -19,14 +19,20 @@ typedef enum
     SDVReaderContentViewModeCoverDoublePage
 } SDVReaderContentViewMode;
 
+typedef enum
+{
+    SDVReaderClosedOnSwipe = 0,
+    SDVReaderClosedOnDone = 1,
+    SDVReaderClosedOnPreview = 2
+} SDVReaderClosedMode;
+
 @interface SDVReaderViewController : ReaderViewController {
     UIView *swipeForArticleView;
 }
 @property NSMutableDictionary *viewerOptions;
 @property int pagesPerScreen;
 @property SDVReaderContentViewMode viewMode;
-@property BOOL closedOnDone;
-
+@property SDVReaderClosedMode closedOnDone;
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object options:(NSMutableDictionary *)options;
 
