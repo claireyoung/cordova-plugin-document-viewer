@@ -497,7 +497,7 @@
 
 -(void)closePageForPreview:(int)page
 {
-    BOOL isPreview = [[viewerOptions objectForKey:@"isPreview"] objectForKey:@"isPreview"];
+    BOOL isPreview = [[[viewerOptions objectForKey:@"isPreview"] objectForKey:@"isPreview"] boolValue];
     if (isPreview && page > MAX_PREVIEW_PAGE) {
         if ([delegate respondsToSelector:@selector(dismissReaderViewController:)] == YES)
         {
@@ -1239,7 +1239,7 @@
     NSDictionary* pageOptions = [self.viewerOptions objectForKey: @"page"];
     if (pageOptions != nil) {
         NSInteger pageNumber = [[pageOptions objectForKey: @"number"] integerValue];
-        BOOL isPreview = [[viewerOptions objectForKey:@"isPreview"] objectForKey:@"isPreview"];
+        BOOL isPreview = [[[viewerOptions objectForKey:@"isPreview"] objectForKey:@"isPreview"] boolValue];
         if (pageNumber > MAX_PREVIEW_PAGE && isPreview) {
             pageNumber = MAX_PREVIEW_PAGE;
         }
