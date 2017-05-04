@@ -1142,7 +1142,9 @@
     [self setPagesPerScreen: 1];
     [self setViewMode:SDVReaderContentViewModeSinglePage];
     
-    CGRect scrollViewRect = CGRectInset(viewRect, -scrollViewOutset, 1.0f);
+    [self.view setBackgroundColor:[UIColor blackColor]];
+    
+    CGRect scrollViewRect = CGRectInset(viewRect, -scrollViewOutset, 10.0f);
     theScrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect]; // All
     theScrollView.autoresizesSubviews = NO; theScrollView.contentMode = UIViewContentModeRedraw;
     theScrollView.showsHorizontalScrollIndicator = NO; theScrollView.showsVerticalScrollIndicator = NO;
