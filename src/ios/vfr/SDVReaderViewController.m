@@ -38,7 +38,7 @@
 
 #define TAP_AREA_SIZE 48.0f
 
-#define MAX_PREVIEW_PAGE 15
+#define MAX_PREVIEW_PAGE 14
 
 //TODO understand how delegation works and why this works if it is not synthesized although none of the delegation stuff of the superclass is in the public header
 //@synthesize delegate;
