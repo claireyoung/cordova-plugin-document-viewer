@@ -1144,7 +1144,7 @@
     
     [self.view setBackgroundColor:[UIColor blackColor]];
     
-    CGRect scrollViewRect = CGRectInset(viewRect, -scrollViewOutset, 10.0f);
+    CGRect scrollViewRect = CGRectInset(viewRect, -scrollViewOutset, 3.0f);
     theScrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect]; // All
     theScrollView.autoresizesSubviews = NO; theScrollView.contentMode = UIViewContentModeRedraw;
     theScrollView.showsHorizontalScrollIndicator = NO; theScrollView.showsVerticalScrollIndicator = NO;
@@ -1629,6 +1629,19 @@
     } else {
         swipeForArticleView.hidden = true;
     }
+}
+
+-(void)swipeUpForReaderView:(CGPoint)velocity
+{
+    if (! [self isCurrentPageArticle]) {
+        return;
+    }
+    
+    swipeDismissAnimationController = [[SwipeDismissAnimationController alloc] init];
+    swipeDismissAnimationController.velocity = CGPointMake(velocity.x*1000.0, velocity.y*1000.0);
+    self.transitioningDelegate = self;
+    self.closedOnDone = SDVReaderClosedOnSwipe;
+    [delegate dismissReaderViewController:self];
 }
 
 #pragma mark - ReaderMainToolbarDelegate methods

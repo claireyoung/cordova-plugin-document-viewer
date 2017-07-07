@@ -40,6 +40,7 @@
 @optional
 
 -(void)scrollViewEndedZoomingWithScrollView:(UIScrollView *)view atScale:(CGFloat)scale;
+-(void)swipeUpForReaderView:(CGPoint)velocity;
 
 @end
 

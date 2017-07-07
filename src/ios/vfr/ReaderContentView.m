@@ -58,7 +58,7 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source, CGFloat bf
 
 	CGFloat h_scale = (target.height / source.height);
 
-	return ((w_scale < h_scale) ? w_scale : h_scale);
+	return w_scale;
 }
 
 #pragma mark - ReaderContentView instance methods
@@ -311,6 +311,24 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source, CGFloat bf
 }
 
 #pragma mark - UIScrollViewDelegate methods
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    
+
+    NSLog(@"scroll view end draging velocity x %f, velocity y %f, offset x %f, offset y %f ", velocity.x, velocity.y, (*targetContentOffset).x , (*targetContentOffset).y);
+    
+    CGFloat distance = (*targetContentOffset).x - (*targetContentOffset).y;
+    if (self.zoomScale == self.minimumZoomScale && velocity.y > 2.0f && (*targetContentOffset).y > 10.0f) {
+        NSLog(@"Triggered Swipe Up");
+        
+        if ([self.message respondsToSelector:@selector(swipeUpForReaderView:)])
+        {
+            [self.message swipeUpForReaderView:velocity]; // Refresh
+        }
+
+    }
+}
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
