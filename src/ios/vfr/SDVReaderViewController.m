@@ -1144,7 +1144,7 @@
     
     [self.view setBackgroundColor:[UIColor blackColor]];
     
-    CGRect scrollViewRect = CGRectInset(viewRect, -scrollViewOutset, 3.0f);
+    CGRect scrollViewRect = CGRectInset(viewRect, -scrollViewOutset, 4.0f);
     theScrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect]; // All
     theScrollView.autoresizesSubviews = NO; theScrollView.contentMode = UIViewContentModeRedraw;
     theScrollView.showsHorizontalScrollIndicator = NO; theScrollView.showsVerticalScrollIndicator = NO;
