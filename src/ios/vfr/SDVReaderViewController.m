@@ -1250,6 +1250,11 @@
         [self showDocumentPage:1];
     }
     
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    
+    if (orientation == UIDeviceOrientationLandscapeRight || orientation == UIDeviceOrientationLandscapeLeft) {
+        [self orientationChanged:nil];
+    }
 }
 
 -(void)handlePan:(UIPanGestureRecognizer *)recognizer
