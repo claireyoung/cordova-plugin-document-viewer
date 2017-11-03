@@ -1115,7 +1115,7 @@
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
     
     assert(document != nil); // Must have a valid ReaderDocument
     
@@ -1321,7 +1321,8 @@
             NSLog(@"[pdfviewer] single page");
             self.pagesPerScreen = 1;
             self.viewMode = SDVReaderContentViewModeSinglePage;
-            
+            [self handleLandscapeDoublePage];
+
             [self updateContentViews:theScrollView];
         } else if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
             NSLog(@"[pdfviewer] cover mode");
@@ -1734,13 +1735,13 @@
 //        [self handleLandscapeDoublePage];
     }
     
-    [self handleLandscapeDoublePage];
-    lastAppearSize = CGSizeZero;
-    
-    // hide thumbs if they are not required
-    if ([document.pageCount integerValue] <= pagesPerScreen) {
-        [mainPagebar hidePagebar]; // Show
-    }
+        [self handleLandscapeDoublePage];
+        lastAppearSize = CGSizeZero;
+        
+        // hide thumbs if they are not required
+        if ([document.pageCount integerValue] <= pagesPerScreen) {
+            [mainPagebar hidePagebar]; // Show
+        }
     
 }
 
